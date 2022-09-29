@@ -1,0 +1,23 @@
+{% extends "quizapp/base.html" %}
+{% block title %} Django Quiz App {% endblock %}
+
+
+{% block content %}
+
+
+	<div class="quiz-app-wrapper">
+		<legend class="app-title">Django Quiz App</legend>
+		<div class="app-content">
+			<legend style= "font-size: 22px; font-weight: 500;">Available Quizzes<legend>
+			<ol>
+			{% for quiz in quizzes reversed %}
+				<li class="available-quiz" style= "font-size: 22px;">
+					<a style= "font-size: 20px; font-weight: bold; text-decoration: none; color: blue;" href="{% url 'quiz_detail' quiz.id %}">{{ quiz }} ({{ quiz.question_set.all.count }} Questions)</a>
+				</li>
+			{% endfor %}
+			</ol>
+		</div>
+	</div>
+	
+	
+{% endblock %}
