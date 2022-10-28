@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+     "jazzmin",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,6 +42,21 @@ INSTALLED_APPS = [
     "quizapp.apps.QuizappConfig",
     "froala_editor",
 ]
+
+JAZZMIN_SETTINGS = {
+	"site_title": "Django Quiz App",
+	"site_header": "Quiz",
+	"site_brand": "Quiz",
+	"welcome_sign": "Welcome to the Quiz",
+	"copyright": "codewitgabi projects",
+}
+
+JAZZMIN_SETTINGS["show_ui_builder"] = True
+
+JAZZMIN_UI_TWEAKS = {
+	"theme": "darkly",
+}
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
