@@ -3,6 +3,7 @@ from django.db import models
 
 class Quiz(models.Model):
 	name = models.CharField(max_length= 50)
+	duration = models.IntegerField(default=60, help_text="Enter quiz duration in seconds.")
 	
 	def __str__(self):
 		return self.name

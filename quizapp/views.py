@@ -20,6 +20,7 @@ def quiz_detail(request, id):
 	num_of_questions = paginator.num_pages
 	
 	questions = paginator.get_page(page_number)
+	
 	context = {
 		"quiz": quiz,
 		"questions": questions,

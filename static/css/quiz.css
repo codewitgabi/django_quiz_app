@@ -3,8 +3,18 @@
 	padding: 0;
 	box-sizing: border-box;
 }
+#github {
+	display: inline-block;
+	margin: 1em 12rem;
+	padding: 10px 35px;
+	border: none;
+	border-radius: 50px;
+	text-decoration: none;
+	background: #27282c;
+	color: #fff;
+}
 .quiz-app-wrapper {
-	margin: 6em 12rem 1em 12rem;
+	margin: 3em 12rem 1em 12rem;
 	box-shadow: hsl(0, 0%, 80%) 0 0 16px;
 	background: #fff;
 	border-radius: 6px;
@@ -16,10 +26,15 @@
 	font-weight: 800;
 	text-align: center;
 }
+.timer {
+	margin-top: 0.5em;
+	text-align: center;
+	font-weight: 700;
+	font-size: 2rem;
+}
 .app-content {
 	padding: 20px;
 }
-
 .question-text {
 	font-size: 18px;
 	font-weight: 600;
@@ -67,6 +82,9 @@
 }
 @media only screen and (max-width: 500px) {
 	.quiz-app-wrapper {
-		margin: 4em 1em 1em 1em;
+		margin: 3em 1em 1em 1em;
+	}
+	#github {
+		margin: 1em;
 	}
 }

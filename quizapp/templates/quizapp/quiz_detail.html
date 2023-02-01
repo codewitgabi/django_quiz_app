@@ -6,6 +6,10 @@
 	
 	<div class="quiz-app-wrapper">
 		<legend class="app-title">{{ quiz }} Quiz</legend>
+		<div class="timer">
+			<!-- Timer displayer. # DO NOT DELETE -->
+			<span id="clock"></span>
+		</div>
 		<div class="app-content">
 		{% for question in questions %}
 			<p class="question-text">{{ current_page }}. {{ question }}</p>
@@ -133,6 +137,37 @@
 			window.location = "{% url 'index' %}";
 		}
 		
+	</script>
+	
+	<script>
+		const clock = document.querySelector("#clock");
+		let time = "{{ quiz.duration }}";
+		
+		/* Get Minutes and Seconds digits */
+		let min = Math.floor(time/60);
+		let sec = time % 60;
+		
+		min = min > 9 ? min : `0${min}`;
+		sec = sec > 9 ? sec : `0${sec}`;
+		
+		clock.textContent = `${min}:${sec}`;
+		
+		const interval = window.setInterval(() => {
+			time--;
+			let min = Math.floor(time/60);
+			let sec = time % 60;
+			
+			min = min > 9 ? min : `0${min}`;
+			sec = sec > 9 ? sec : `0${sec}`;
+			
+			clock.textContent = `${min}:${sec}`;
+			
+			/* End Quiz if users time is up */
+			if (time === 0) {
+				window.clearInterval(interval);
+				submitAnswers();
+			}
+		}, 1000)
 	</script>
 
 

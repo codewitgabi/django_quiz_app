@@ -12,7 +12,7 @@
 			<ol>
 			{% for quiz in quizzes reversed %}
 				<li class="available-quiz" style= "font-size: 22px;">
-					<a style= "font-size: 20px; font-weight: bold; text-decoration: none; color: blue;" href="{% url 'quiz_detail' quiz.id %}">{{ quiz }} ({{ quiz.question_set.all.count }} Questions)</a>
+					<a style= "font-size: 20px; font-weight: bold; text-decoration: none; color: blue;" href="{% url 'quiz_detail' quiz.id %}">{{ quiz }} ({{ quiz.question_set.all.count }} Question{{ quiz.question_set.all.count|pluralize }})</a>
 				</li>
 			{% endfor %}
 			</ol>
