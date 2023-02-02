@@ -6,12 +6,17 @@ class AnswerInline(admin.TabularInline):
 	model = Answer
 	
 
+@admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
 	list_display = ["text"]
 	search_fields = ["text"]
 	inlines = [AnswerInline]
 	
+
+@admin.register(Quiz)
+class QuizAdmin(admin.ModelAdmin):
+	list_display = ["name", "duration"]
+	search_fields = ["name"]
 	
-admin.site.register(Question, QuestionAdmin)
+	
 admin.site.register(Answer)
-admin.site.register(Quiz)
