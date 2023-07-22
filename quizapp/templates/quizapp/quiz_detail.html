@@ -1,174 +1,68 @@
 {% extends "quizapp/base.html" %}
-{% block title %} Random Quiz {% endblock %}
-
+{% load static %}
+{% block title %} {{ quiz.name }} {% endblock %}
 
 {% block content %}
-	
-	<div class="quiz-app-wrapper">
-		<legend class="app-title">{{ quiz }} Quiz</legend>
-		<div class="timer">
-			<!-- Timer displayer. # DO NOT DELETE -->
-			<span id="clock"></span>
-		</div>
-		<div class="app-content">
-		{% for question in questions %}
-			<p class="question-text">{{ current_page }}. {{ question }}</p>
-			<form action="" id= "form" method="POST">
-			{% csrf_token %}
-			{% for answer in question.answer_set.all %}
-				<input type="radio" name="option" value= "{{ answer.id }}">
-				<span class="question-option">{{ answer }}</span><br>
-			{% endfor %}
-			</form>
-		{% endfor %}
-		
-		{% if questions.has_previous %}
-			<button class="pagination-button pagination-btn" id= "prevBtn" data-url= "{{ current_page }}" data-action= "prev">Prev</button>
-		{% endif %}
-		
-		{% if questions.has_next %}
-			<button class="pagination-button pagination-btn float" id= "nextBtn" data-url= "{{ current_page }}" data-action= "next">Next</button>
-		{% endif %}
-		
-		{% if questions.number == questions.paginator.num_pages %}
-		<button class="quiz-submit" type="submit" onclick= "submitAnswers()">Submit</button>
-		{% else %}
-		<div class= "clear"></div>
-		{% endif %}
-		
-		</div>
-	</div>
 
-	
-	<script>
-		
-		function getCookie(name) {
-		    let cookieValue = null;
-		    if (document.cookie && document.cookie !== '') {
-		        const cookies = document.cookie.split(';');
-		        for (let i = 0; i < cookies.length; i++) {
-		            const cookie = cookies[i].trim();
-		            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-		                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-		                break;
-		            }
-		        }
-		    }
-		    return cookieValue;
-		}
-		const csrftoken = getCookie('csrftoken');
-		
-	</script>
-	
-	
-	<script>
-		var prevBtn = document.getElementById("prevBtn");
-		var paginationBtn = document.getElementsByClassName("pagination-btn");
-		var quiz_id = "{{ quiz.id }}";
-		var num_of_questions = "{{ num_of_questions }}";
-		var form = document.getElementById("form");
-		
-		
-		for (let i=1; i<Number(num_of_questions) + 1; i++) {
-			form.option.value = localStorage.getItem(i)
-			form.option.value = localStorage.getItem(i)
-			form.option.value = localStorage.getItem(i)
-			form.option.value = localStorage.getItem(i)
-		}
-		
-		for (var i=0; i<paginationBtn.length; i++) {
-			paginationBtn[i].addEventListener("click", function () {
-				var url = this.dataset.url;
-				var action = this.dataset.action;
-				var prevURL = `/quiz_detail/${quiz_id}?page=${Number(url) - 1}`;
-				var nextURL = `/quiz_detail/${quiz_id}?page=${Number(url) + 1}`;
-				
-				for (var radioBtn of form.option) {
-					if (radioBtn.checked) {
-						localStorage.setItem(url, radioBtn.value)
-						break;
-					}
-				}
-				
-				if (action === "prev") {
-					window.location = prevURL
-				} else if (action === "next") {
-					window.location = nextURL
-				}
-				
-			})
-		}
-		
-		function submitAnswers () {
-			var answers = {};
-			var sendAnswerURL = "{% url 'get_answers' %}";
-			
-			localStorage.setItem(num_of_questions, form.option.value)
-			
-			for (let i=1; i<Number(num_of_questions) + 1; i++) {
-				localStorage[`${i}`] ? answers[`${i}`] = localStorage[`${i}`] : answers[`${i}`] = ""
-			}
-			
-			answers["quiz_id"] = quiz_id
-			
-			fetch(sendAnswerURL, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					"X-CSRFToken": csrftoken
-				},
-				body: JSON.stringify(answers)
-			})
-			.then(response => response.json())
-			.then(data => {
-				var score = Number(data)/Number(num_of_questions) * 100;
-				
-				if (score >= 50) {
-					alert(`Congratulations!!!\n\n\t\tScore: ${score}%`)
-				} else {
-					alert(`Failed!!!\n\n\t\tScore: ${score}%`)
-				}
-			})
-			.catch(error => {
-				alert(error)
-			})
-			
-			localStorage.clear()
-			window.location = "{% url 'index' %}";
-		}
-		
-	</script>
-	
-	<script>
-		const clock = document.querySelector("#clock");
-		let time = "{{ quiz.duration }}";
-		
-		/* Get Minutes and Seconds digits */
-		let min = Math.floor(time/60);
-		let sec = time % 60;
-		
-		min = min > 9 ? min : `0${min}`;
-		sec = sec > 9 ? sec : `0${sec}`;
-		
-		clock.textContent = `${min}:${sec}`;
-		
-		const interval = window.setInterval(() => {
-			time--;
-			let min = Math.floor(time/60);
-			let sec = time % 60;
-			
-			min = min > 9 ? min : `0${min}`;
-			sec = sec > 9 ? sec : `0${sec}`;
-			
-			clock.textContent = `${min}:${sec}`;
-			
-			/* End Quiz if users time is up */
-			if (time === 0) {
-				window.clearInterval(interval);
-				submitAnswers();
-			}
-		}, 1000)
-	</script>
+  <div class="quiz-app-wrapper">
+    <legend class="app-title">{{ quiz }} Quiz</legend>
+    <div class="timer">
+      <!-- Timer displayer. # DO NOT DELETE -->
+      <span id="clock"></span>
+    </div>
+    <div class="app-content">
+      {% for question in questions %}
+      <p class="question-text">{{ current_page }}. {{ question }}</p>
+      <form action="" id="form" method="POST">
+        {% csrf_token %}
+        <input
+          type="hidden"
+          name="question_id"
+          value="{{ question.id }}"
+          required />
+        {% for answer in question.answer_set.all %}
+        <input type="radio" name="option" value="{{ answer.id }}" />
+        <span class="question-option">{{ answer }}</span><br />
+        {% endfor %}
+      </form>
+      {% endfor %} {% if questions.has_previous %}
+      <button
+        class="pagination-button pagination-btn"
+        id="prevBtn"
+        data-url="{{ current_page }}"
+        data-action="prev">
+        Prev
+      </button>
+      {% endif %} {% if questions.has_next %}
+      <button
+        class="pagination-button pagination-btn float"
+        id="nextBtn"
+        data-url="{{ current_page }}"
+        data-action="next">
+        Next
+      </button>
+      {% endif %} {% if questions.number == questions.paginator.num_pages %}
+      <button class="quiz-submit" type="submit" onclick="submitAnswers()">
+        Submit
+      </button>
+      {% else %}
+      <div class="clear"></div>
+      {% endif %}
+    </div>
+  </div>
 
+  <script>
+    /**
+     * Variables defined here.
+     */
+
+    var quiz_id = "{{ quiz.id }}";
+    const time = "{{ quiz.duration }}";
+    var num_of_questions = "{{ num_of_questions }}";
+    const csrf_token = "{{ csrf_token }}";
+    const sendAnswerURL = "{% url 'get_answers' %}";
+  </script>
+
+  <script src="{% static 'js/main.js' %}"></script>
 
 {% endblock %}
