@@ -1,2 +1,5 @@
 django-jazzmin
 Django>=3.2
+django-cors-headers==4.2.0
+django-froala-editor==4.1.0
+djangorestframework==3.14.0
