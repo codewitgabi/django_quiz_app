@@ -69,8 +69,10 @@ form.addEventListener("change", (e) => {
 /**
  * Form submission event handler
  */
-function submitAnswers() {
+async function submitAnswers() {
   var answers = {};
+  // reset clock to make sure clock stops counting.
+  window.clearInterval(interval);
 
   localStorage.setItem(num_of_questions, form.option.value);
 
@@ -82,16 +84,21 @@ function submitAnswers() {
 
   answers["quiz_id"] = quiz_id;
 
-  fetch(sendAnswerURL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-CSRFToken": csrf_token,
-    },
-    body: JSON.stringify(answers),
-  })
-    .then((response) => response.json())
-    .then((data) => {
+  // the NS_BINDING_ABORT error with firefox seems to be caused by the async behaviour of fetch API
+  // when location is changed to /  response is not yet received and binding is aborted.
+  // code change is to change it to synchronous action.  change browser to / after receive response from server.
+  const response = await(
+    fetch(sendAnswerURL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrf_token,
+      },
+      body: JSON.stringify(answers),
+    }));
+
+  if (response.ok) {
+      const data = await response.json();
       const score = (Number(data.result) / Number(num_of_questions)) * 100;
 
       if (score >= 50) {
@@ -99,10 +106,9 @@ function submitAnswers() {
       } else {
         alert(`Failed!!!\n\n\t\tScore: ${score}%`);
       }
-    })
-    .catch((error) => {
-      alert(error);
-    });
+  } else {
+      throw new Error('Request failed: ' + response.statusText);
+   }
 
   localStorage.clear();
   window.location = "/";
