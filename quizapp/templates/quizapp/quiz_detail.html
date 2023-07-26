@@ -25,7 +25,9 @@
         <span class="question-option">{{ answer }}</span><br />
         {% endfor %}
       </form>
-      {% endfor %} {% if questions.has_previous %}
+      {% endfor %}
+      
+      {% if questions.has_previous %}
       <button
         class="pagination-button pagination-btn"
         id="prevBtn"
@@ -33,7 +35,9 @@
         data-action="prev">
         Prev
       </button>
-      {% endif %} {% if questions.has_next %}
+      {% endif %}
+      
+      {% if questions.has_next %}
       <button
         class="pagination-button pagination-btn float"
         id="nextBtn"
@@ -41,7 +45,9 @@
         data-action="next">
         Next
       </button>
-      {% endif %} {% if questions.number == questions.paginator.num_pages %}
+      {% endif %}
+      
+      {% if questions.number == questions.paginator.num_pages %}
       <button class="quiz-submit" type="submit" onclick="submitAnswers()">
         Submit
       </button>
@@ -49,6 +55,12 @@
       <div class="clear"></div>
       {% endif %}
     </div>
+    
+    <div class="p-2">
+        {% for page in paginator.page_range %}
+            <a class="pag-link" href="{% url 'quiz_detail' quiz.id %}?page={{ forloop.counter }}">{{ forloop.counter }}</a>
+        {% endfor %}
+      </div>
   </div>
 
   <script>

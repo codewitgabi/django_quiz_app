@@ -28,7 +28,8 @@ def quiz_detail(request, id):
         "quiz": quiz,
         "questions": questions,
         "current_page": current_page,
-        "num_of_questions": num_of_questions
+        "num_of_questions": num_of_questions,
+        "paginator": paginator
     }
     return render(request, "quizapp/quiz_detail.html", context)
 
