@@ -1,5 +1,11 @@
-django-jazzmin
-Django>=3.2
+asgiref==3.7.2
+dj-database-url==2.0.0
+Django==3.2
 django-cors-headers==4.2.0
 django-froala-editor==4.1.0
+django-jazzmin==2.6.0
 djangorestframework==3.14.0
+psycopg2==2.9.6
+pytz==2023.3
+sqlparse==0.4.4
+typing_extensions==4.7.1
