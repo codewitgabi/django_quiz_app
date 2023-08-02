@@ -8,7 +8,7 @@ from rest_framework.response import Response
 
 
 def index(request):
-    quizzes = Quiz.objects.all()
+    quizzes = Quiz.quiz_to_show()
     context = {"quizzes": quizzes}
     return render(request, "quizapp/index.html", context)
 
