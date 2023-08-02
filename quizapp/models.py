@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Count
 
 
 class Quiz(models.Model):
@@ -11,13 +12,9 @@ class Quiz(models.Model):
     
     @classmethod
     def quiz_to_show(cls):
-        quizzes = []
-        
-        for quiz in cls.objects.all():
-            if quiz.question_set.all().count() > 0:
-                quizzes.append(quiz)
-        
-        return Quiz.objects.filter(name__in=quizzes)
+        return cls.objects.annotate(
+            number_of_questions=Count("question")
+        ).filter(number_of_questions__gt=0)
     
     def __str__(self):
         return self.name
