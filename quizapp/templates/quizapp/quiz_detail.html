@@ -71,6 +71,7 @@
     var quiz_id = "{{ quiz.id }}";
     const time = "{{ quiz.duration }}";
     var num_of_questions = "{{ num_of_questions }}";
+    var questions_list = {{ questions_list|safe }};
     const csrf_token = "{{ csrf_token }}";
     const sendAnswerURL = "{% url 'get_answers' %}";
   </script>

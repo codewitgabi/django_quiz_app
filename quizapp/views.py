@@ -23,13 +23,20 @@ def quiz_detail(request, id):
     num_of_questions = paginator.num_pages
 
     questions = paginator.get_page(page_number)
+    
+    # get list of question IDs in the quiz
+    qs = questions_list.values_list()
+    questions_list=[]
+    for q in qs: 
+        questions_list.append(q[0]) 
 
     context = {
         "quiz": quiz,
         "questions": questions,
         "current_page": current_page,
         "num_of_questions": num_of_questions,
-        "paginator": paginator
+        "paginator": paginator,
+        "questions_list":json.dumps(questions_list)
     }
     return render(request, "quizapp/quiz_detail.html", context)
 
