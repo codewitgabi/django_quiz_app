@@ -30,7 +30,8 @@ clock.textContent = `${min}:${sec}`;
  */
 
 for (let i = 1; i < Number(num_of_questions) + 1; i++) {
-  form.option.value = localStorage.getItem(i);
+  // we now use q+question_id to uniquely identify a question. 
+  form.option.value = localStorage.getItem('q'+form.question_id.value);
 }
 
 /**
@@ -60,7 +61,9 @@ form.addEventListener("change", (e) => {
   console.log(form);
   for (var radioBtn of form.option) {
     if (radioBtn.checked) {
-      localStorage.setItem(form.question_id.value, radioBtn.value);
+      // as localStorage contains a lot of other key value pairs that are with 
+      // number as key, we prefix q in front to indicate the question id
+      localStorage.setItem('q'+form.question_id.value, radioBtn.value);
       break;
     }
   }
@@ -76,9 +79,10 @@ async function submitAnswers() {
 
   localStorage.setItem(num_of_questions, form.option.value);
 
-  for (let i = 1; i < Number(num_of_questions) + 1; i++) {
-    localStorage[`${i}`]
-      ? (answers[`${i}`] = localStorage[`${i}`])
+  // before sumbit, look into question list to find answers
+  for (let i = 0; i < Number(num_of_questions) ; i++) {
+    localStorage.getItem('q'+questions_list[i]) 
+      ? (answers[`${i}`] = localStorage.getItem('q' + questions_list[i]))
       : (answers[`${i}`] = "");
   }
 
