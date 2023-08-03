@@ -5,6 +5,7 @@ from django.db.models import Count
 class Quiz(models.Model):
     name = models.CharField(max_length= 50, unique=True)
     duration = models.IntegerField(default=60, help_text="Enter quiz duration in seconds.")
+    display = models.BooleanField(default=False)
     
     class Meta:
         verbose_name_plural = "Quizzes"
@@ -14,7 +15,7 @@ class Quiz(models.Model):
     def quiz_to_show(cls):
         return cls.objects.annotate(
             number_of_questions=Count("question")
-        ).filter(number_of_questions__gt=0)
+        ).filter(number_of_questions__gt=0, display=True)
     
     def __str__(self):
         return self.name
